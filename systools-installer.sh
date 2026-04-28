@@ -27,7 +27,7 @@ echo 'setting up commands please wait...'
 gap 1
 #creates the command fot 'systools' (prints version information)
 echo 'creating the systools command in /usr/local/bin/systools'
-echo -e '#!/bin/bash\necho "systools Beta 0.1 Developer Setup."\necho "shell $SHELL"\necho "kernel: linux kernal"' > systools
+echo -e '#!/bin/bash\necho "systools Beta 0.1 Developer Setup."\necho "shell $SHELL"\necho "kernel: linux kernel"' > systools
 chmod +x systools
 sudo mv systools /usr/local/bin/systools
 # creates the command for 'termres' (cds to ~, clears and prints a welcome message)
