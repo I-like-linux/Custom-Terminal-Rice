@@ -1,0 +1,50 @@
+{
+  "layer": "top",
+  "position": "top",
+  "exclusive": true,
+  "height": 32,
+  "margin": "0 0 0 0",
+
+  "modules-left": ["hyprland/workspaces"],
+  "modules-center": ["clock"],
+  "modules-right": ["pulseaudio", "backlight", "battery", "tray"],
+
+  "hyprland/workspaces": {
+    "disable-scroll": true
+  },
+
+  "clock": {
+    "format": "{:%a, %d %b, %I:%M %p}"
+  },
+
+  "pulseaudio": {
+    "format": "{volume} {icon}",
+    "format-icons": ["", "", ""],
+    "on-click": "pavucontrol",
+    "reverse-scrolling": true
+  },
+
+  "backlight": {
+    "device": "intel_backlight",
+    "format": "{percent} {icon}",
+    "format-icons": [""],
+    "min-length": 7,
+    "reverse-scrolling": true
+  },
+
+  "battery": {
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{capacity}% {icon}",
+    "format-charging": "{capacity} 󰂄",
+    "format-plugged": "{capacity} ",
+    "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+  },
+
+  "tray": {
+    "icon-size": 16,
+    "spacing": 0
+  }
+}
