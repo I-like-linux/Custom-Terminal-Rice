@@ -1,0 +1,136 @@
+-- =========================================================================
+-- Hyprland Lua configuration
+-- =========================================================================
+
+local home = os.getenv("HOME")
+local terminal = "flatpak run com.raggesilver.BlackBox"
+local browser = "firefox"
+local menu = "fuzzel"
+local files = "nautilus"
+
+-- Cursor environment. Do not use "$HOME" here: hl.env() does not expand it.
+hl.env("XCURSOR_PATH", home .. "/.local/share/icons:" .. home .. "/.icons:/usr/share/icons")
+hl.env("XCURSOR_THEME", "ArcstarryCursors")
+hl.env("XCURSOR_SIZE", "32")
+
+
+hl.config({
+    monitor = { "eDP-1, 2560x1440@60, left, 1" },
+
+    general = {
+        gaps_in = 5,
+        gaps_out = 0,
+        border_size = 2,
+        col = {
+            active_border = "rgba(9CCBFFFF)",
+            inactive_border = "rgba(514A8AFF)",
+        },
+        layout = "dwindle"
+    },
+
+    decoration = {
+        rounding = 5,
+        blur = {
+            enabled = true,
+            size = 2,
+            passes = 2,
+        },
+        shadow = {
+            enabled = true,
+            range = 20,
+            render_power = 5,
+        },
+    },
+
+    input = {
+        touchpad = {
+            natural_scroll = true,
+            tap_to_click = true,
+            clickfinger_behavior = true,
+            scroll_factor = 1.0,
+            disable_while_typing = false,
+        },
+    },
+
+    animations = {
+        enabled = true,
+    },
+})
+
+hl.gesture({
+    fingers = 3,
+    direction = "horizontal",
+    action = "workspace",
+})
+
+hl.curve("smooth", {
+    type = "bezier",
+    points = { { 0.25, 1 }, { 0.5, 1 } },
+})
+
+hl.animation({ leaf = "windows", enabled = true, speed = 7, bezier = "smooth" })
+hl.animation({ leaf = "border", enabled = true, speed = 7, bezier = "smooth" })
+hl.animation({ leaf = "fade", enabled = true, speed = 7, bezier = "smooth" })
+hl.animation({ leaf = "workspaces", enabled = true, speed = 7, bezier = "smooth" })
+
+-- Launch applications
+hl.bind("SUPER + SPACE", hl.dsp.exec_cmd(terminal))
+hl.bind("SUPER + B", hl.dsp.exec_cmd(browser))
+hl.bind("SUPER + RETURN", hl.dsp.exec_cmd(menu))
+hl.bind("SUPER + F", hl.dsp.exec_cmd(files))
+
+-- Screenshots
+hl.bind("PRINT", hl.dsp.exec_cmd("slurp | grim -g - - | wl-copy"))
+hl.bind("SHIFT + PRINT", hl.dsp.exec_cmd("slurp | grim -g - ~/Pictures/Screenshots/shot.png"))
+
+-- Window controls
+hl.bind("SUPER + Q", hl.dsp.window.close())
+hl.bind("SUPER + T", hl.dsp.window.fullscreen({ action = "toggle" }))
+hl.bind("SUPER + V", hl.dsp.window.float({ action = "toggle" }))
+hl.bind("SUPER + R", hl.dsp.exec_cmd("hyprctl reload"))
+
+-- Move focus
+hl.bind("SUPER + LEFT", hl.dsp.focus({ direction = "l" }))
+hl.bind("SUPER + RIGHT", hl.dsp.focus({ direction = "r" }))
+hl.bind("SUPER + UP", hl.dsp.focus({ direction = "u" }))
+hl.bind("SUPER + DOWN", hl.dsp.focus({ direction = "d" }))
+
+-- Change workspaces
+hl.bind("CTRL + ALT + LEFT", hl.dsp.focus({ workspace = "-1" }))
+hl.bind("CTRL + ALT + RIGHT", hl.dsp.focus({ workspace = "+1" }))
+
+-- Move windows to workspaces
+hl.bind("CTRL + ALT + SHIFT + LEFT", hl.dsp.window.move({ workspace = "-1" }))
+hl.bind("CTRL + ALT + SHIFT + RIGHT", hl.dsp.window.move({ workspace = "+1" }))
+
+-- Move windows on the current workspace
+hl.bind("SUPER + ALT + RIGHT", hl.dsp.window.move({ direction = "right" }))
+hl.bind("SUPER + ALT + LEFT", hl.dsp.window.move({ direction = "left" }))
+hl.bind("SUPER + ALT + UP", hl.dsp.window.move({ direction = "up" }))
+hl.bind("SUPER + ALT + DOWN", hl.dsp.window.move({ direction = "down" }))
+
+-- Screen recording
+hl.bind(
+    "ALT + PRINT",
+    hl.dsp.exec_cmd(
+        "bash -c \"wf-recorder -g \\\"$(slurp)\\\" -f ~/Videos/selection.mkv\""
+    )
+)
+hl.bind("SUPER + SHIFT + R", hl.dsp.exec_cmd("pkill -INT -x wf-recorder"))
+
+
+-- Volume
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"))
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"))
+hl.bind("XF86AudioMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"))
+
+-- Brightness
+hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl -d intel_backlight set +5%"))
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl -d intel_backlight set 5%-"))
+
+hl.on("hyprland.start", function()
+    hl.exec_cmd("hyprpaper")
+    hl.exec_cmd("waybar &")
+    hl.exec_cmd("hyprctl setcursor ArcstarryCursors 32")
+end)
+
